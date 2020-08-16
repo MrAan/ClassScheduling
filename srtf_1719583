@@ -1,0 +1,100 @@
+//MUHAMMAD AZHAN HANNAN BIN MOHD ABDUL AZIZ
+//1719583
+//OPERATING SYSTEM SECTION 3
+#include<iostream>
+
+using namespace std;
+
+struct Process
+	{
+   int ccode;     // course code
+   int duration;      // class duration
+   int priority;  //priority
+   int arrival_time;   //prefered arrival time
+   int completion;
+	};
+	
+	// courses CSC2201 with priority 2 for 3 hours with prefered to start first, 
+	// CSC3401 with priority 3 for 2 hours prefered to start second, 
+	// and CSC1103 with priority 1 for 1 hour 
+	Process proc[] = {{2201,3,2,1,10}, {3401, 2, 3,2,10}, {1103, 1,1,3,10}};
+
+int main()
+{
+	
+	cout << "\n===============================================================" <<endl;
+	cout <<"MUHAMMAD AZHAN HANNAN BIN MOHD ABDUL AZIZ | 1719583 | Section 3" << endl;
+	cout <<"SHORTEST REMAINING TIME ALGORITHM" << endl;
+	cout <<"===============================================================" <<endl;
+    int a[10],b[10],x[10];
+    int waiting[10],turnaround[10];
+    int i,j,smallest,count=0,time,n, temp, temp2;
+    double avg=0,tt=0,end;
+	
+	//No of Class to be scheduled
+    n = 3;
+    
+    for(i = 0; i<n ; i++){
+    a[i]=proc[i].arrival_time;
+    b[i]=proc[i].duration;	
+	}
+    
+    for(i=0; i<n; i++)
+        x[i]=b[i];
+
+    b[9]=9999;
+    for(time=0; count!=n; time++)
+    {
+        smallest=9;
+        for(i=0; i<n; i++)
+        {
+            if(a[i]<=time && b[i]<b[smallest] && b[i]>0 )
+                smallest=i;
+        }
+        b[smallest]--;
+
+        if(b[smallest]==0)
+        {
+            count++;
+            end=time+1;
+            proc[smallest].completion = end;
+            waiting[smallest] = end - a[smallest] - x[smallest];
+            turnaround[smallest] = end - a[smallest];
+        }
+    }
+    
+    cout<<"\nClass"<<"\t"<< "Burst-time"<<"\t"<<"Arrival-time" <<"\t"<<"Waiting-time" <<"\t"<<"Turnaround-time"<< "\t"<<"Completion-time"<<endl;
+    for(i=0; i<n; i++)
+    {
+        cout<<" "<<proc[i].ccode<<"\t\t"<<x[i]<<"\t\t"<<a[i]<<"\t\t"<<waiting[i]<<"\t\t"<<turnaround[i]<<"\t\t"<<proc[i].completion<<endl;
+        avg = avg + waiting[i];
+        tt = tt + turnaround[i];
+    }
+
+  	//sorting the ccode base on shortest completion time in ascending order
+	for(i=0;i<n;i++)
+	{		
+		for(j=i+1;j<n;j++)
+		{
+			if(proc[i].completion>proc[j].completion)
+			{
+				temp  =proc[i].completion;
+				proc[i].completion=proc[j].completion;
+				proc[j].completion=temp;
+				temp2  =proc[i].ccode;
+				proc[i].ccode=proc[j].ccode;
+				proc[j].ccode=temp2;
+			}
+		}
+	}
+	
+	cout << "\n====================================" <<endl;
+    cout << "The class scheduling is as below :" <<endl;
+    cout << endl;
+ 	for(i=0;i<n;i++)
+	cout<<proc[i].ccode<<" \t";
+	cout<<endl;
+    cout << "\n====================================" <<endl;
+    cout<<"\nAverage waiting time ="<<avg/n<<endl;
+    cout<<"Average Turnaround time ="<<tt/n<<endl;
+}
